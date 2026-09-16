@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NUS-ISS hackathon: automotive workshop ideation report</title>
+  <style>
+    :root {
+      --paper:#f4f6f8; --surface:#ffffff; --ink:#18242e; --muted:#596976;
+      --line:#cbd6de; --blue:#1e5e8c; --blue-soft:#e8f1f7; --teal:#18736b;
+      --teal-soft:#e4f2ef; --amber:#b76818; --amber-soft:#fff1de; --red:#a4483d;
+      --red-soft:#f8e9e7; --shadow:0 10px 34px rgba(24,36,46,.08);
+      --sans:"Avenir Next Condensed","Arial Narrow",Arial,sans-serif;
+      --serif:Charter,Georgia,serif; --mono:SFMono-Regular,Menlo,monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--paper)}
+    body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--serif);font-size:17px;line-height:1.62}
+    a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:3px}
+    a:hover{text-decoration-thickness:2px}
+    a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+    .shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+    .rail{position:sticky;top:0;height:100vh;padding:26px 20px 20px;background:var(--ink);color:white;display:flex;flex-direction:column;gap:24px}
+    .event{font-family:var(--sans);font-size:18px;font-weight:800;line-height:1.08;letter-spacing:.01em}
+    .event small{display:block;margin-top:8px;color:#b9c8d2;font-family:var(--mono);font-size:11px;font-weight:500;line-height:1.45}
+    nav{display:grid;gap:5px}
+    nav a{display:block;padding:9px 10px;color:#d8e4ec;text-decoration:none;border-left:3px solid transparent;font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.01em}
+    nav a[aria-current="page"]{color:white;background:rgba(255,255,255,.08);border-color:#6eb5e1}
+    .rail-note{margin-top:auto;color:#adbec9;font-family:var(--mono);font-size:10px;line-height:1.55}
+    main{min-width:0;padding:42px clamp(24px,5vw,76px) 80px}
+    .view{max-width:1120px;margin:0 auto}
+    .js .view{display:none}
+    .js .view.active{display:block;animation:view-in .18s ease-out}
+    .js body.read-all .view{display:block;margin-bottom:90px}
+    @keyframes view-in{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .view.active{animation:none}}
+    h1,h2,h3{font-family:var(--sans);line-height:1.04;margin:0 0 18px}
+    h1{font-size:clamp(42px,7vw,82px);max-width:980px;letter-spacing:-.035em}
+    h2{font-size:clamp(31px,4.5vw,52px);letter-spacing:-.025em}
+    h3{font-size:25px;margin-top:34px}
+    h4{font-family:var(--sans);font-size:18px;margin:26px 0 8px}
+    p{max-width:72ch;margin:0 0 17px}
+    .lede{font-size:clamp(20px,2.1vw,27px);line-height:1.44;max-width:70ch;color:#2a3945}
+    .eyebrow{margin:0 0 12px;color:var(--blue);font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:26px 0 36px;padding:14px 0;border-block:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+    .route-grid,.topic-grid,.candidate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:30px 0}
+    .route,.topic,.candidate-card{position:relative;padding:22px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow)}
+    .route a,.topic a,.candidate-card>a:first-child{font-family:var(--sans);font-size:21px;font-weight:800;line-height:1.15;text-decoration:none}
+    .route p,.topic p,.candidate-card p{font-size:15px;line-height:1.5;margin:10px 0 0;color:#3f505d}
+    .problem-anchor{margin:40px 0;padding:26px 28px;background:var(--ink);color:white;border-left:7px solid #70b7df}
+    .problem-anchor p{margin:0;font-size:22px;line-height:1.45;max-width:72ch}
+    .unknown{border-left:5px solid var(--amber);background:var(--amber-soft);padding:18px 20px;margin:24px 0}
+    .unknown strong,.control strong{font-family:var(--sans)}
+    .control{border-left:5px solid var(--teal);background:var(--teal-soft);padding:18px 20px;margin:24px 0}
+    .trace{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:28px 0 36px;border:1px solid var(--line);background:white}
+    .trace div{position:relative;padding:17px 10px 16px;border-right:1px solid var(--line);font-family:var(--sans);font-size:13px;font-weight:800;text-align:center}
+    .trace div:last-child{border-right:0}
+    .trace span{display:block;margin-top:5px;color:var(--muted);font-family:var(--mono);font-size:9px;font-weight:500}
+    .trace .live{background:var(--blue-soft);color:var(--blue)}
+    .trace .gate{background:var(--amber-soft);color:#87500f}
+    .trace .verified{background:var(--teal-soft);color:var(--teal)}
+    .lesson{margin:32px 0;padding:0 0 28px;border-bottom:1px solid var(--line)}
+    .lesson h3{font-size:28px;margin-bottom:10px}
+    .implication{margin-top:14px;padding-left:16px;border-left:3px solid var(--blue);font-size:16px}
+    table{width:100%;border-collapse:collapse;margin:24px 0 34px;background:white;font-size:14px;line-height:1.45}
+    th,td{padding:13px 14px;border:1px solid var(--line);vertical-align:top;text-align:left}
+    th{background:#e8edf1;font-family:var(--sans);font-size:13px;letter-spacing:.01em}
+    .compare th:nth-child(1){width:18%}
+    .promise,.confidence{display:inline-block;padding:3px 7px;font-family:var(--mono);font-size:10px;font-weight:800}
+    .promise{background:var(--blue-soft);color:var(--blue)}
+    .confidence{background:var(--amber-soft);color:#84500e}
+    .candidate-card.favorite{border-top:6px solid var(--blue)}
+    .candidate-card.alternate{border-top:6px solid var(--teal)}
+    .candidate-card.fallback{border-top:6px solid var(--amber)}
+    .badge{display:inline-block;margin-bottom:12px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .mechanism{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:26px 0;border:1px solid var(--line);background:white}
+    .mechanism div{padding:16px;border-right:1px solid var(--line);font-family:var(--sans);font-size:13px;font-weight:800}
+    .mechanism div:last-child{border-right:0}
+    .mechanism small{display:block;margin-top:6px;color:var(--muted);font-family:var(--serif);font-size:13px;font-weight:400;line-height:1.4}
+    .gate-box{margin:26px 0;padding:22px;background:var(--amber-soft);border:1px solid #e8c899}
+    .gate-box h3{margin:0 0 10px;font-size:22px}
+    ul,ol{max-width:76ch;padding-left:24px}
+    li{margin:7px 0}
+    .source-list{list-style:none;padding:0;max-width:none}
+    .source-list li{margin:0;padding:18px 0;border-bottom:1px solid var(--line)}
+    .source-list code{font-family:var(--mono);font-size:10px;color:var(--muted)}
+    .source-list p{font-size:14px;margin:5px 0 0}
+    details{margin:18px 0;border:1px solid var(--line);background:white}
+    summary{cursor:pointer;padding:15px 18px;font-family:var(--sans);font-weight:800}
+    details>div{padding:0 18px 18px}
+    .return{display:inline-flex;align-items:center;gap:8px;margin-top:28px;font-family:var(--sans);font-weight:800}
+    .status-row{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+    .status{padding:5px 8px;background:#e8edf1;font-family:var(--mono);font-size:10px}
+    .status.good{background:var(--teal-soft);color:var(--teal)}
+    .status.warn{background:var(--amber-soft);color:#84500e}
+    .status.stop{background:var(--red-soft);color:var(--red)}
+    .footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--muted)}
+    @media(max-width:900px){
+      .shell{display:block}.rail{position:sticky;z-index:20;top:0;height:auto;padding:10px 14px;gap:8px}.event{font-size:14px}.event small,.rail-note{display:none}
+      nav{display:flex;overflow-x:auto;gap:2px;padding-bottom:2px}nav a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent;padding:7px 9px;font-size:13px}nav a[aria-current="page"]{border-bottom-color:#6eb5e1}
+      main{padding:30px 18px 64px}.route-grid,.topic-grid,.candidate-grid{grid-template-columns:1fr}.trace{grid-template-columns:repeat(2,1fr)}.trace div{border-bottom:1px solid var(--line)}
+      .mechanism{grid-template-columns:1fr 1fr}.mechanism div:nth-child(2){border-right:0}.mechanism div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+      .table-wrap{overflow-x:auto;box-shadow:inset -14px 0 18px -18px var(--ink)}table{min-width:720px}
+    }
+    @media print{
+      .rail{display:none}.shell{display:block}main{padding:0}.view,.js .view,.js .view.active{display:block!important;max-width:none;page-break-before:always}.view:first-of-type{page-break-before:auto}
+      a{color:inherit;text-decoration:none}.route-grid,.topic-grid,.candidate-grid{grid-template-columns:repeat(2,1fr)}details>div{display:block}summary{list-style:none}.return{display:none}
+    }
+  </style>
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="event">NUS-ISS<br>Show Me Your Agents<small>Automotive workshop opportunity<br>Research date 16 Sep 2026</small></div>
+    <nav aria-label="Report views">
+      <a href="#start" data-route-link>Start</a>
+      <a href="#domain" data-route-link>Domain briefing</a>
+      <a href="#compare" data-route-link>Compare solutions</a>
+      <a href="#evidence" data-route-link>Evidence and gaps</a>
+      <a href="#all" data-route-link>Read all</a>
+    </nav>
+    <div class="rail-note">Protocol v0.4<br>Published weights: unknown<br>Final choice: yours</div>
+  </aside>
+  <main id="main" tabindex="-1">
+
+    <section class="view" id="start" data-view="start">
+      <p class="eyebrow">Start</p>
+      <h1>A better next decision in the workshop</h1>
+      <p class="lede">The problem is not a shortage of possible causes. It is the work of turning a vague complaint, partial scan evidence and fragmented service information into a justified next action.</p>
+      <div class="meta"><span>Event: NUS-ISS Show Me Your Agents</span><span>Category: Public</span><span>Final submission: 28 Sep 2026</span><span>Scope: ideation, not product build</span></div>
+      <div class="problem-anchor"><p>Workshops rely on experienced technicians to combine customer descriptions, inspection findings, prior repairs and manufacturer information. Junior technicians need more guidance, and uncommon or intermittent faults can extend turnaround time.</p></div>
+      <p>This statement comes from the submitted proposal. The proposal's two-agent architecture, synthetic repair database, top-three metric, feature list and data assumptions are not requirements. Official event sources only require an agentic solution to a real SME problem and publish six unweighted qualities: practical relevance, pilot feasibility, secure and responsible design, sound architecture, effective agent use and measurable impact. <a href="#source-event" data-route-link>Official event source</a></p>
+      <div class="unknown"><strong>Consequential unknowns.</strong> No numeric judging weights, final submission package, deadline time, Demo Day format or complete participant terms were found. No workshop dataset, technician reviewer or guaranteed SME access was supplied. The event's public-resource notice also needs legal clarification before private records or valuable pre-existing IP enter the submission.</div>
+      <div class="route-grid">
+        <article class="route"><a href="#domain" data-route-link>Learn the domain</a><p>See how diagnosis works, why code lookup fails, what data exists and what a fair evaluation looks like.</p></article>
+        <article class="route"><a href="#compare" data-route-link>Compare three options</a><p>Separate competitive promise from execution confidence and open one candidate at a time.</p></article>
+        <article class="route"><a href="#evidence" data-route-link>Inspect evidence</a><p>Review official sources, experiments, access gaps, review objections and shelved directions.</p></article>
+      </div>
+      <p class="footer">Intake defaults used because no reply arrived during the run: 40 to 80 team-hours, no guaranteed external data and balanced full-stack/agent capability.</p>
+    </section>
+
+    <section class="view" id="domain" data-view="domain">
+      <p class="eyebrow">Domain briefing</p>
+      <h2>Learn the workshop before choosing a product</h2>
+      <p class="lede">This chapter stands on its own. It explains the work, failure modes, available inputs and evaluation choices without assuming any proposed solution.</p>
+      <div class="topic-grid">
+        <article class="topic"><a href="#domain-workflow" data-route-link>How diagnosis works</a><p>Actors, evidence flow and one concrete walkthrough.</p></article>
+        <article class="topic"><a href="#domain-failures" data-route-link>Why it fails</a><p>Codes, intermittent symptoms, source mismatch and workshop economics.</p></article>
+        <article class="topic"><a href="#domain-existing" data-route-link>Existing approaches</a><p>Scan tools, repair information, worksheets and senior escalation.</p></article>
+        <article class="topic"><a href="#domain-data" data-route-link>Available data</a><p>What OBD, NHTSA and Singapore public data can and cannot support.</p></article>
+        <article class="topic"><a href="#domain-good" data-route-link>What good means</a><p>Workshop outcomes, event qualities and strong baselines.</p></article>
+        <article class="topic"><a href="#domain-open" data-route-link>Open questions</a><p>The checks worth making before a build locks.</p></article>
+      </div>
+      <div class="trace" aria-label="Evidence chain"><div class="live">Complaint<span>driver context</span></div><div class="live">Observation<span>scan and inspection</span></div><div>Source<span>vehicle-specific</span></div><div class="gate">Test<span>safe and feasible</span></div><div>Result<span>supports or contradicts</span></div><div class="verified">Verification<span>original concern</span></div></div>
+    </section>
+
+    <section class="view" id="domain-workflow" data-view="domain-workflow">
+      <p class="eyebrow">Domain briefing · workflow</p>
+      <h2>Diagnosis is a managed investigation</h2>
+      <p>A competent workflow starts by preserving the driver's wording and the conditions that produced the symptom. Staff screen for safety, try to reproduce the concern, gather baseline observations and research the exact vehicle. The technician then chooses measurements that separate competing causes. The job continues through authorization, repair and a post-repair check under relevant conditions. ASE task standards and GM's strategy-based diagnosis bulletin support this sequence. <a href="#source-ase" data-route-link>ASE evidence</a> <a href="#source-gm" data-route-link>GM evidence</a></p>
+      <h3>A concrete example</h3>
+      <p>A driver reports intermittent loss of power after a long drive, and the scan contains a powertrain code. Intake must retain the long-drive condition. The code narrows the search but does not name a failed part. A document for a similar model may still be wrong for the engine, market or software version. A useful test must distinguish live causes. If the symptom cannot be reproduced, the honest result may be a recurrence plan rather than a forced diagnosis.</p>
+      <div class="table-wrap"><table><thead><tr><th>Actor</th><th>Contribution</th><th>Common loss</th></tr></thead><tbody>
+        <tr><td>Driver</td><td>Symptoms, timing, media, usage and authorization</td><td>Everyday language becomes a vague repair-order line</td></tr>
+        <tr><td>Service adviser</td><td>Structured concern, commercial terms and contact</td><td>An early guessed cause replaces the original description</td></tr>
+        <tr><td>Technician</td><td>Measurements, hypotheses, tests and verification</td><td>Reasoning stays in memory while only the replaced part is recorded</td></tr>
+        <tr><td>Senior or foreman</td><td>Escalation and quality control</td><td>Receives a summary without the evidence trail</td></tr>
+        <tr><td>Information provider</td><td>Procedures, wiring, bulletins and specifications</td><td>Coverage varies by market, account and vehicle</td></tr>
+      </tbody></table></div>
+      <p>Singapore's independent workshop market is fragmented and price competitive. Ordinary workshops and technicians are not universally licensed by LTA; roadworthiness is enforced through authorised inspection centres. These facts do not prove poor quality. They make multi-brand access costs, low-friction evidence capture and customer trust important. <a href="#source-cccs" data-route-link>CCCS context</a> <a href="#source-mot" data-route-link>MOT policy</a></p>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="domain-failures" data-view="domain-failures">
+      <p class="eyebrow">Domain briefing · failure modes</p>
+      <h2>Why obvious shortcuts fail</h2>
+      <article class="lesson"><h3>L001. A code is a detected condition</h3><p>OEM and supplier bulletins show cases caused by configuration, upstream messages or a different module. A code does not close the investigation.</p><p class="implication"><strong>Design implication.</strong> Keep observation, hypothesis, test, result and conclusion separate. Require a failed test or applicable prescribed procedure before calling a cause supported.</p></article>
+      <article class="lesson"><h3>L002. Reproduction is part of diagnosis</h3><p>Temperature, load, speed, moisture, charging state and elapsed time can determine whether an intermittent problem appears. A short bay check can miss the condition.</p><p class="implication"><strong>Design implication.</strong> Preserve the driver's conditions and support an explicit cannot-duplicate path with a safe recurrence plan.</p></article>
+      <article class="lesson"><h3>L003. A matching document can still be wrong</h3><p>Service information depends on make, model year, engine, market, options, calibration and revision. Public US bulletins can support a demonstration but may not apply to a Singapore vehicle.</p><p class="implication"><strong>Design implication.</strong> Show source-provided, model-extracted and human-confirmed applicability separately. Missing fields remain unknown.</p></article>
+      <article class="lesson"><h3>L004. Another cause list may make the decision worse</h3><p>Commercial tools already show common repairs, real fixes and technician tips. More hypotheses can increase anchoring. A discriminating observation moves the job forward.</p><p class="implication"><strong>Design implication.</strong> Name what evidence would change each live cause and why a proposed test is safe, available and useful now.</p></article>
+      <article class="lesson"><h3>L005. A repair action is not a verified fix</h3><p>Clearing a code or replacing a part does not prove that the original symptom is gone. A later same-concern return can change how the prior job should be interpreted.</p><p class="implication"><strong>Design implication.</strong> Record attempted repair, supported cause, verified resolution and comeback as different states.</p></article>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="domain-existing" data-view="domain-existing">
+      <p class="eyebrow">Domain briefing · existing approaches</p>
+      <h2>The baseline is stronger than chat</h2>
+      <div class="table-wrap"><table><thead><tr><th>Approach</th><th>Current capability</th><th>Open question</th></tr></thead><tbody>
+        <tr><td>Scan tools and generic OBD</td><td>Supported codes, freeze frames and live values</td><td>They do not preserve complaint context or justify the next physical test</td></tr>
+        <tr><td>SureTrack-style repair information</td><td>Code-linked verified fixes, common repairs and technician tips</td><td>A new cause-ranking chatbot has weak differentiation</td></tr>
+        <tr><td>OEM service portals</td><td>Manuals, wiring, bulletins, calibration and diagnostics under specific terms</td><td>Multi-brand access is fragmented and reuse rights are limited</td></tr>
+        <tr><td>Repair orders and shop systems</td><td>Customer, vehicle, estimate, invoice and notes</td><td>Evidence states, failed hypotheses and verification may be absent</td></tr>
+        <tr><td>Worksheets and branching procedures</td><td>Repeatable fields and approved checks</td><td>They are strong baselines for any agent proposal</td></tr>
+        <tr><td>Passive logging and telematics</td><td>Triggered PID capture, long waveform buffers, remote fault feeds and historical data</td><td>Signal choice, coverage and action after an uninformative run remain human work</td></tr>
+      </tbody></table></div>
+      <p>The inspected product pages establish documented functions, not independent effectiveness. A candidate should compare itself with the best relevant simple workflow, not a blank page. <a href="#source-snapon" data-route-link>SureTrack source</a> <a href="#source-logging" data-route-link>Logging sources</a></p>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="domain-data" data-view="domain-data">
+      <p class="eyebrow">Domain briefing · available data</p>
+      <h2>Useful evidence exists, but confirmed repair truth does not</h2>
+      <div class="table-wrap"><table><thead><tr><th>Input</th><th>Inspected status</th><th>Useful for</th><th>Cannot establish</th></tr></thead><tbody>
+        <tr><td>Generic OBD-II</td><td>Standards scope inspected</td><td>Supported powertrain and emissions evidence, read-only replay or live capture</td><td>Universal module access, failed part or correct repair</td></tr>
+        <tr><td>NHTSA VIN, recalls and communications</td><td>APIs exercised or official data inspected</td><td>Vehicle metadata, safety checks and a public bulletin corpus</td><td>Singapore applicability or a confirmed workshop fix</td></tr>
+        <tr><td>NHTSA complaints</td><td>API exercised</td><td>Messy symptom language and counterexamples</td><td>Diagnosis, causality or repair success</td></tr>
+        <tr><td>LTA and data.gov.sg aggregates</td><td>Catalogue and downloads inspected</td><td>Choosing locally relevant makes, ages and fuel types</td><td>Case-level symptoms, DTCs or outcomes</td></tr>
+        <tr><td>OEM service information</td><td>Access pages inspected</td><td>Narrow lawful lookup and expert review</td><td>Unrestricted ingestion or redistribution</td></tr>
+        <tr><td>Workshop repair histories</td><td>Not supplied</td><td>Future local learning with consent</td><td>Anything in the current run</td></tr>
+      </tbody></table></div>
+      <div class="control"><strong>Safe prototype boundary.</strong> Read and organize evidence. Do not clear codes, actuate components, program modules or bypass credentials. Keep full VINs local where possible. Make source market, date and vehicle applicability visible.</div>
+      <p>Newer OBDonUDS support and manufacturer-specific functions complicate older adapter assumptions. Live OBD should be optional, read-only and backed by a deterministic replay. <a href="#source-sae" data-route-link>Standards evidence</a> <a href="#source-nhtsa" data-route-link>NHTSA data</a></p>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="domain-good" data-view="domain-good">
+      <p class="eyebrow">Domain briefing · evaluation</p>
+      <h2>Measure a better decision, not a more confident answer</h2>
+      <p>Workshop success includes time to a reproducible problem definition, diagnostic hands-on time, critical evidence retained, unsupported sources accepted, parts replaced before causal confirmation, verified resolution and same-concern returns. Speed fails if safety or return rates worsen.</p>
+      <p>Each candidate needs a strong baseline with the same inputs. A case builder faces an equally informed form and search tool. A next-test planner faces a branching procedure with the same catalog and safety gates. A recurrence coordinator faces a fixed recurrence form and passive logger.</p>
+      <div class="unknown"><strong>Synthetic evidence limit.</strong> Authored cases can expose software errors, state-transition failures and unsafe outputs. They cannot establish diagnostic accuracy, fewer repeat visits or business impact.</div>
+      <h3>Published event qualities</h3>
+      <div class="status-row"><span class="status good">SME relevance</span><span class="status good">Pilot feasibility</span><span class="status good">Responsible design</span><span class="status good">Sound architecture</span><span class="status good">Effective agent use</span><span class="status good">Measurable impact</span><span class="status warn">Weights unknown</span></div>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="domain-open" data-view="domain-open">
+      <p class="eyebrow">Domain briefing · open questions</p>
+      <h2>Checks worth making before the build locks</h2>
+      <ol>
+        <li>Where did the last hard job lose time: intake, reproduction, source search, test choice, authorization, tool access or verification?</li>
+        <li>Can a qualified technician approve one narrow fault family and its tests?</li>
+        <li>Can one workshop supply six intermittent cases or 20 closed diagnostic packets under acceptable privacy terms?</li>
+        <li>What submission files, video length, deadline time, demo rules and weights appear in Slack or private organizer material?</li>
+        <li>What does the event's public-resource notice allow others to reuse?</li>
+        <li>Did the team redeem Kiro credits, and do Lightsail and model credentials work?</li>
+      </ol>
+      <details><summary>Glossary</summary><div><p><strong>DTC:</strong> diagnostic trouble code, an identifier for a detected condition. <strong>Freeze frame:</strong> operating values captured with a fault. <strong>TSB:</strong> technical service bulletin with its own vehicle and condition scope. <strong>Cannot duplicate:</strong> the symptom did not occur under attempted conditions. <strong>Verified resolution:</strong> the original concern no longer occurs under an appropriate post-repair check.</p></div></details>
+      <a class="return" href="#domain" data-route-link>← Return to domain index</a>
+    </section>
+
+    <section class="view" id="compare" data-view="compare">
+      <p class="eyebrow">Compare solutions</p>
+      <h2>Three decisions an agent could improve</h2>
+      <p class="lede">The strongest competition entry is not the easiest build. It is the one with a visible agent loop, a fair baseline and a claim the team can still test before submission.</p>
+      <div class="table-wrap"><table class="compare"><thead><tr><th>Candidate</th><th>User decision</th><th>Competitive promise</th><th>Execution confidence</th><th>Gate before commitment</th></tr></thead><tbody>
+        <tr><td><a href="#candidate-next" data-route-link>Adaptive next-test planner</a></td><td>What safe observation should be collected next?</td><td><span class="promise">High</span><br>Direct diagnostic reasoning and a strong live loop</td><td><span class="confidence">Low to medium</span><br>Catalog needs independent approval</td><td>One fixture, one fault family, 12 independent decision states</td></tr>
+        <tr><td><a href="#candidate-recurrence" data-route-link>Safe recurrence capture</a></td><td>What should happen after an intermittent fault cannot be reproduced?</td><td><span class="promise">High</span><br>Memorable cross-trip coordination</td><td><span class="confidence">Low to medium</span><br>Strong logger baseline and real cases required</td><td>Six cases, zero unsafe plans, two material evidence gains</td></tr>
+        <tr><td><a href="#candidate-triage" data-route-link>Evidence and source triage</a></td><td>Is the case complete, and what source context is missing?</td><td><span class="promise">Medium to high</span><br>Practical and responsible, but less distinctive</td><td><span class="confidence">Medium</span><br>Bounded build, sparse metadata risk</td><td>Fifty documents and 20 cases against a strong form/filter baseline</td></tr>
+      </tbody></table></div>
+      <div class="candidate-grid">
+        <article class="candidate-card favorite"><span class="badge">Strongest competition entry</span><a href="#candidate-next" data-route-link>Adaptive next-test planner</a><p>Choose it if a qualified reviewer can approve the catalog quickly. Drop it if it cannot beat an equally gated branching procedure.</p></article>
+        <article class="candidate-card alternate"><span class="badge">Second competition option</span><a href="#candidate-recurrence" data-route-link>Safe recurrence capture</a><p>Choose it if six intermittent cases are available and adaptive capture beats the fixed logger protocol.</p></article>
+        <article class="candidate-card fallback"><span class="badge">Lowest dependency</span><a href="#candidate-triage" data-route-link>Evidence and source triage</a><p>Choose it if source coverage is sufficient and the agent beats a form without adding material burden.</p></article>
+      </div>
+      <div class="unknown"><strong>Recommendation condition.</strong> If no independent technician can approve a narrow test catalog within two days, the adaptive planner drops behind the other options. If neither real-case gate can run, evidence and source triage is the most defensible build, but its source-authentic test still decides whether the agent layer survives.</div>
+    </section>
+
+    <section class="view" id="candidate-next" data-view="candidate-next">
+      <p class="eyebrow">Candidate detail · strongest competition entry</p>
+      <h2>Adaptive next-test planner</h2>
+      <p class="lede">Give the technician one safe, feasible and discriminating next observation, then revise the plan when the result or available equipment changes.</p>
+      <div class="trace"><div class="live">Complaint<span>preserved</span></div><div class="live">Evidence<span>current state</span></div><div>Hypotheses<span>unresolved</span></div><div class="gate">Next test<span>approved catalog</span></div><div>Result<span>state update</span></div><div class="verified">Stop or verify<span>technician owns</span></div></div>
+      <h3>Worked scenario</h3><p>A junior technician has an intermittent concern, generic scan evidence and several plausible causes. The planner considers only tests approved for one named vehicle and fault family. It removes tests blocked by safety, equipment, credentials or missing applicability, then names one observation and the branches it can separate. A negative result changes the live state. When the preferred tool becomes unavailable, the planner chooses an approved alternative or escalates.</p>
+      <div class="mechanism"><div>Intake agent<small>Structures the concern without replacing the driver's words.</small></div><div>Evidence agent<small>Retrieves applicable sources and updates supported or contradicted states.</small></div><div>Policy service<small>Owns safety, tools, credentials and permissions.</small></div><div>Planning agent<small>May return only approved catalog IDs or a stop.</small></div></div>
+      <h3>Smallest demonstrable build</h3><p>One named fixture, one fault family, 8 to 12 independently approved tests, 12 held-out decision states, read-only or replayed OBD evidence, one equipment-change path, one safety veto and an evidence export. Total effort is unknown until catalog construction, independent review and baseline preparation are timed. The option fits the assumed 40 to 80 team-hours only if all of that work fits inside the same budget.</p>
+      <div class="gate-box"><h3>Selection gate</h3><ul><li>Zero hard safety or applicability violations.</li><li>Independent agreement on the next action, stop or escalation in at least 10 of 12 states.</li><li>Better than an equally gated branching procedure in at least three adaptive states, with no loss elsewhere.</li><li>Every selected test maps to the exact current source and vehicle scope.</li></ul></div>
+      <h3>Strongest objection</h3><p>The catalog contains most of the automotive intelligence. A planner can pass a benchmark written from the same catalog while the catalog itself is wrong. The independent review accepted this objection and made outside technician approval a hard gate.</p>
+      <p><strong>Observed:</strong> diagnosis is iterative, codes are not failed-part labels, and software can enforce bounded agent actions. <strong>Proposed:</strong> the planner will choose a better next observation than the strong baseline or improve real workshop outcomes.</p>
+      <details><summary>Experiment E001</summary><div><p>A synthetic information-gain ranking was rerun after reducing one test's burden by 10 percent. The ranking did not change, so the predeclared sensitivity claim failed. The experiment only established arithmetic and an equipment-exclusion path. It provides no evidence that the test ordering is valid for a vehicle.</p></div></details>
+      <a class="return" href="#compare" data-route-link>← Return to comparison</a>
+    </section>
+
+    <section class="view" id="candidate-recurrence" data-view="candidate-recurrence">
+      <p class="eyebrow">Candidate detail · second competition option</p>
+      <h2>Safe recurrence capture</h2>
+      <p class="lede">When the workshop cannot reproduce an intermittent complaint, coordinate a technician-approved passive capture plan that turns a later episode into a more specific next action.</p>
+      <div class="trace"><div class="live">Failed attempt<span>conditions tried</span></div><div class="gate">Release plan<span>safety approved</span></div><div>Passive capture<span>no driver action</span></div><div>Post-stop report<span>under one minute</span></div><div>Episode review<span>data quality visible</span></div><div class="verified">Next action<span>or still insufficient</span></div></div>
+      <h3>Worked scenario</h3><p>A loss-of-power concern does not appear during a short road test. The coordinator proposes supported passive signals, a trigger and three short post-stop questions. The technician approves the plan. The first run is uninformative and one signal is unavailable. The system says so and revises within the catalog. A later replayed episode aligns the trace, warning state and driver report, then routes the vehicle to an approved test or safety escalation.</p>
+      <div class="mechanism"><div>Attempt reconciler<small>Records what the workshop already tried.</small></div><div>Capture planner<small>Selects from approved passive actions.</small></div><div>Safety gate<small>Blocks unsafe reproduction and every write command.</small></div><div>Episode reviewer<small>Explains what changed and what remains missing.</small></div></div>
+      <div class="control"><strong>Driver safety boundary.</strong> No phone, scanner or logger interaction while moving. No deliberate recreation of braking, steering, restraint, smoke, fire, high-voltage or other hazardous conditions. Missing data never becomes proof that the fault did not recur.</div>
+      <h3>Smallest demonstrable build</h3><p>One combustion-vehicle fixture, one intermittent fault family and three replayed trips: failed workshop reproduction, an uninformative run that changes the plan, and a useful captured episode. Add one hard refusal for an unsafe symptom. Estimated work is 40 to 70 team-hours after the capture catalog exists.</p>
+      <div class="gate-box"><h3>Selection gate</h3><p>Use six de-identified intermittent jobs and a fixed recurrence form plus passive logger as the baseline. C004 needs zero unsafe instructions, all critical conditions in five cases, defensible plan changes in three, material evidence gains or avoided repetition in two, less than two minutes of technician review and less than one minute of post-stop driver work.</p></div>
+      <h3>Strongest objection</h3><p>It may be a logger wrapped in an agent, and generic OBD may miss the signal that matters. Existing products already offer triggers, long buffers, telematics and remote diagnostics. If case-specific planning and revision do not beat the fixed protocol, make recurrence capture a feature inside another candidate.</p>
+      <p><strong>Observed:</strong> passive and triggered logging exists, signal coverage varies, and cannot-duplicate is a real diagnostic state. <strong>Proposed:</strong> adaptive capture plans will collect more decision-changing evidence without extra risk.</p>
+      <a class="return" href="#compare" data-route-link>← Return to comparison</a>
+    </section>
+
+    <section class="view" id="candidate-triage" data-view="candidate-triage">
+      <p class="eyebrow">Candidate detail · lowest dependency</p>
+      <h2>Evidence and source-triage case builder</h2>
+      <p class="lede">Turn a vague repair order into a source-linked case packet, while admitting when public evidence lacks enough context to judge applicability.</p>
+      <div class="trace"><div class="live">Complaint<span>original wording</span></div><div>Questions<span>conditional gaps</span></div><div>Vehicle<span>confirmed fields</span></div><div class="gate">Source triage<span>provenance classes</span></div><div>Packet<span>complete or incomplete</span></div><div class="verified">Technician handoff<span>no diagnosis claim</span></div></div>
+      <h3>Worked scenario</h3><p>The repair order says, "It loses power sometimes." The system asks about operating conditions and recent work, then retrieves public communications. Each applicability field is labelled source-provided, model-extracted with a passage, or human-confirmed. If market or powertrain remains unknown, the result is `source unclear`. A tempting near match appears under reviewed and excluded, not as guidance.</p>
+      <div class="mechanism"><div>Concern keeper<small>Preserves the driver's words and separates fact from interpretation.</small></div><div>Configuration resolver<small>Tracks confirmed, decoded and unknown fields.</small></div><div>Evidence finder<small>Searches a frozen public corpus with source metadata.</small></div><div>Triage gate<small>Returns supported by source text, conflict found or source unclear.</small></div></div>
+      <h3>Smallest demonstrable build</h3><p>A browser intake, fixed case schema, cached corpus, cited passage extraction, strong form/filter baseline and a 50-document, 20-case source-authentic test. Estimated work is 35 to 60 team-hours.</p>
+      <div class="gate-box"><h3>Selection gate</h3><p>No non-applicable source may be called applicable. At least 40 of 50 documents must support a useful decision without hand enrichment. Accuracy must beat the baseline by 15 percentage points, decisive fields need cited passages, three questions must suffice in 17 of 20 cases, and median time may be no more than 20 percent slower.</p></div>
+      <h3>Strongest objection</h3><p>NHTSA's flat data omits or sparsely populates many fields that matter, including market, powertrain, build range and prerequisites. A deterministic gate cannot repair missing or wrongly extracted metadata. A high `source unclear` rate is therefore a product failure, not a safe victory.</p>
+      <p><strong>Observed:</strong> exact source context matters and public metadata is incomplete. <strong>Proposed:</strong> adaptive questions and source triage will outperform an equally informed form and search workflow.</p>
+      <a class="return" href="#compare" data-route-link>← Return to comparison</a>
+    </section>
+
+    <section class="view" id="evidence" data-view="evidence">
+      <p class="eyebrow">Evidence and archive</p>
+      <h2>Sources, limits and directions not shortlisted</h2>
+      <h3>Official event information</h3>
+      <ul class="source-list">
+        <li id="source-event"><a href="https://www.iss.nus.edu.sg/show-me-your-agents">NUS-ISS, Show Me Your Agents</a><p>Source of category rules, timeline, six published solution qualities, finalists, prizes, special awards and the public-resource notice. No numeric weights are published.</p></li>
+        <li><a href="https://www.iss.nus.edu.sg/community/newsroom/news-detail/2026/09/01/nus-iss-learning-festival-2026-addresses-key-blockers-to-enterprise-ai--data-readiness--governance--and-workforce-capability">NUS-ISS Learning Festival press release</a><p>Confirms the event's SME, AWS and measurable-impact framing.</p></li>
+        <li><code>Outlook messages, 28 Aug and 9 Sep 2026</code><p>Official participant emails confirmed dates, Lightsail, Bedrock setup, OpenClaw, Hermes Agent, NanoClaw, OpenRouter and Kiro provisions. These are available tools, not architecture mandates.</p></li>
+      </ul>
+      <h3>Domain and data sources</h3>
+      <ul class="source-list">
+        <li id="source-ase"><a href="https://www.ase.com/uploads/ASE_AutoServiceConsult_Study_Guide_2026.pdf">ASE Automobile Service Consultant guide</a><p>Supports concern capture, history, authorization and repair-order tasks. It is a competence standard, not a Singapore time study.</p></li>
+        <li id="source-gm"><a href="https://static.nhtsa.gov/odi/tsbs/2019/MC-10154625-9999.pdf">GM Strategy Based Diagnosis bulletin</a><p>Supports the iterative path from concern and preliminary checks through diagnosis, repair and verification. It is OEM guidance, not universal practice.</p></li>
+        <li id="source-cccs"><a href="https://www.cccs.gov.sg/-/media/custom/ccs/files/media-and-publications/publications/market-studies/annex-a_consultancy-report.pdf">CCCS automotive parts consultant report</a><p>Supports fragmented and price-competitive Singapore workshop context. The market study is not a 2026 census.</p></li>
+        <li id="source-mot"><a href="https://www.mot.gov.sg/news-resources/newsroom/written-reply-by-minister-for-transport-s-iswaran-to-parliamentary-question-on-enforcement-checks-on-qualification-and-certification-of-technicians-performing-maintenance-and-repair-works-in-vehicle-workshops/">Singapore Ministry of Transport written reply</a><p>Explains the roadworthiness inspection regime and the decision not to license ordinary workshops or technicians.</p></li>
+        <li id="source-nhtsa"><a href="https://www.nhtsa.gov/nhtsa-datasets-and-apis">NHTSA datasets and APIs</a><p>Official source for VIN, recall, complaint and manufacturer-communication access. Public data lacks confirmed workshop root causes and repairs.</p></li>
+        <li id="source-sae"><a href="https://saemobilus.sae.org/standards/j1979-2_202104-e-e-diagnostic-test-modes-obdonuds">SAE J1979-2 public scope</a><p>Supports the regulated OBDonUDS boundary. Full standards text and many manufacturer-specific functions are not public inputs.</p></li>
+        <li><a href="https://techinfo.toyota.com/techInfoPortal/appmanager/t3/ti?_nfpb=true&_pageLabel=ti_whats_tis">Toyota Technical Information System</a><p>Shows subscription-based access to manuals, bulletins, wiring and professional diagnostics for North American vehicles.</p></li>
+        <li><a href="https://datamall.lta.gov.sg/content/datamall/en/search_datasets.html">LTA DataMall datasets</a><p>Singapore vehicle population and inspection aggregates can guide case selection, not diagnosis.</p></li>
+      </ul>
+      <h3>Product baselines</h3>
+      <ul class="source-list">
+        <li id="source-snapon"><a href="https://www.snapon.com/EN/US/Diagnostics/Information--Software-Products/SureTrack-Expert">Snap-on SureTrack Expert</a><p>Official vendor page for real fixes, top repairs and technician tips. It establishes a strong product baseline, not independent effectiveness.</p></li>
+        <li id="source-logging"><a href="https://www.snapon.com/Files/Diagnostics-US-2020/Manuals/APOLLO_D8.pdf">Snap-on APOLLO-D8 manual</a><p>Documents technician-configured PID triggers and saved recordings.</p></li>
+        <li><a href="https://www.picoauto.com/library/picoscope-automotive-training/knowledge-base/waveform-memory">PicoScope waveform memory</a><p>Documents long-duration and buffered capture for intermittent events.</p></li>
+        <li><a href="https://support.geotab.com/help/mygeotab/maintenance-and-diagnostics/maintenance/faults-overview">Geotab faults overview</a><p>Documents remote faults and explicitly warns that reports are guidance rather than a guarantee of condition.</p></li>
+        <li><a href="https://service.tesla.com/en-US/remote-connections-diagnostics">Tesla remote connections and diagnostics</a><p>Documents owner-authorized remote signals and alerts for Tesla vehicles. It does not establish cross-make access.</p></li>
+      </ul>
+      <h3>Review findings</h3>
+      <div class="status-row"><span class="status warn">C001 held for source-authentic test</span><span class="status warn">C002 held for independent catalog review</span><span class="status warn">C004 held for six-case recurrence test</span><span class="status stop">C003 shelved without partner data</span></div>
+      <p>Three independent candidate reviews found selection-changing gaps. A fresh coverage challenger then identified the recurrence interval and a separate product scan tested its baseline. Worker settings inherited the current task settings. The environment did not expose effective model or reasoning identities, and four total concurrency slots limited the initial run to three workers beside the coordinator.</p>
+      <h3>Shelved directions</h3>
+      <details><summary>Verified workshop memory</summary><div><p>The comeback-driven state model is useful, but no partner records establish artifact quality, technician review burden or local case density. Reopen after one workshop supplies 20 de-identified packets and the half-day artifact-yield test passes.</p></div></details>
+      <details><summary>Broad autonomous diagnosis</summary><div><p>Shelved because the team lacks comprehensive service information, representative confirmed-fault cases and safe write access. Reopen with a defined vehicle population, licensed sources and qualified review.</p></div></details>
+      <details><summary>Predictive maintenance</summary><div><p>Shelved because no fleet stream, installation path or failure labels were supplied. Reopen when an SME owns that problem and supplies the data.</p></div></details>
+      <details><summary>Proposer and critic for likely causes</summary><div><p>Shelved because two model opinions do not establish diagnostic validity, and existing products already show likely fixes. Reopen only if controlled evaluation shows that a critic catches consequential errors beyond deterministic checks.</p></div></details>
+      <h3>Remaining gaps</h3>
+      <ul><li>Private organizer rules and legal scope of the public-resource notice.</li><li>Direct observation of current Singapore workshop work.</li><li>A qualified technician reviewer and workshop case access.</li><li>Actual team build capacity, redeemed credits and working cloud credentials.</li><li>Any representative evidence of real repair outcomes.</li></ul>
+    </section>
+
+    <section class="view" id="all" data-view="all">
+      <p class="eyebrow">Read all</p><h2>Continuous reading mode</h2><p>All report views are visible below in this mode. Use print to save a complete static copy. The focused navigation remains the recommended way to compare candidates and return to evidence.</p>
+    </section>
+
+  </main>
+</div>
+<script>
+(() => {
+  const views = [...document.querySelectorAll('[data-view]')];
+  const links = [...document.querySelectorAll('[data-route-link]')];
+  const topRoutes = new Set(['start','domain','compare','evidence','all']);
+  const viewFor = route => document.querySelector(`[data-view="${CSS.escape(route)}"]`);
+  const sectionFor = route => route.startsWith('domain-') ? 'domain' : route.startsWith('candidate-') ? 'compare' : topRoutes.has(route) ? route : 'start';
+  function saveScroll(){ history.replaceState({...history.state, scrollY:window.scrollY, route:location.hash.slice(1)||'start'},''); }
+  function render(focus=true){
+    const route = location.hash.slice(1) || 'start';
+    const target = viewFor(route) || viewFor('start');
+    document.body.classList.toggle('read-all', route === 'all');
+    views.forEach(v => v.classList.toggle('active', v === target));
+    links.forEach(a => {
+      const r = a.getAttribute('href').slice(1);
+      if (topRoutes.has(r)) a.setAttribute('aria-current', r === sectionFor(route) ? 'page' : 'false');
+    });
+    if (route === 'all') views.forEach(v => v.classList.add('active'));
+    const y = history.state?.route === route ? history.state?.scrollY || 0 : 0;
+    requestAnimationFrame(() => { window.scrollTo(0,y); if(focus){ target.setAttribute('tabindex','-1'); target.focus({preventScroll:true}); } });
+  }
+  document.addEventListener('click', e => { const a=e.target.closest('[data-route-link]'); if(!a) return; saveScroll(); });
+  window.addEventListener('popstate', () => render(false));
+  window.addEventListener('beforeunload', saveScroll);
+  if(!location.hash) history.replaceState({route:'start',scrollY:0},'', '#start');
+  render(false);
+})();
+</script>
+</body>
+</html>
