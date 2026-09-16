@@ -83,6 +83,7 @@
     li{margin:7px 0}
     .source-list{list-style:none;padding:0;max-width:none}
     .source-list li{margin:0;padding:18px 0;border-bottom:1px solid var(--line)}
+    .glossary{max-width:78ch;margin:28px 0}.glossary dt{margin-top:20px;font-family:var(--sans);font-size:18px;font-weight:800;color:var(--ink)}.glossary dd{margin:5px 0 0;padding-bottom:16px;border-bottom:1px solid var(--line);line-height:1.55}
     .source-list code{font-family:var(--mono);font-size:10px;color:var(--muted)}
     .source-list p{font-size:14px;margin:5px 0 0}
     details{margin:18px 0;border:1px solid var(--line);background:white}
@@ -119,6 +120,7 @@
       <a href="#compare" data-route-link>Compare solutions</a>
       <a href="#evidence" data-route-link>Evidence and gaps</a>
       <a href="#all" data-route-link>Read all</a>
+      <a href="#glossary" data-route-link>Glossary</a>
     </nav>
     <div class="rail-note">Protocol v0.4<br>Published weights: unknown<br>Final choice: yours</div>
   </aside>
@@ -236,7 +238,6 @@
         <li>What does the event's public-resource notice allow others to reuse?</li>
         <li>Did the team redeem Kiro credits, and do Lightsail and model credentials work?</li>
       </ol>
-      <details><summary>Glossary</summary><div><p><strong>DTC:</strong> diagnostic trouble code, an identifier for a detected condition. <strong>Freeze frame:</strong> operating values captured with a fault. <strong>TSB:</strong> technical service bulletin with its own vehicle and condition scope. <strong>Cannot duplicate:</strong> the symptom did not occur under attempted conditions. <strong>Verified resolution:</strong> the original concern no longer occurs under an appropriate post-repair check.</p></div></details>
       <a class="return" href="#domain" data-route-link>← Return to domain index</a>
     </section>
 
@@ -345,13 +346,32 @@
       <p class="eyebrow">Read all</p><h2>Continuous reading mode</h2><p>All report views are visible below in this mode. Use print to save a complete static copy. The focused navigation remains the recommended way to compare candidates and return to evidence.</p>
     </section>
 
+    <section class="view" id="glossary" data-view="glossary">
+      <p class="eyebrow">Glossary</p>
+      <h2>Terms used in this report</h2>
+      <dl class="glossary">
+        <dt>Diagnostic trouble code (DTC)</dt><dd>A code reported by a vehicle system when it detects a condition; it identifies a signal or state, not automatically the failed part.</dd>
+        <dt>OBD-II</dt><dd>The on-board diagnostics interface and common emissions-related data convention available on many vehicles.</dd>
+        <dt>OBDonUDS</dt><dd>A newer diagnostic service convention carried over vehicle networks; support and manufacturer-specific coverage vary.</dd>
+        <dt>Freeze frame</dt><dd>A snapshot of operating values captured when a fault code is set.</dd>
+        <dt>PID</dt><dd>Parameter identifier: a named live measurement, such as engine speed or coolant temperature, that a scan tool can request when supported.</dd>
+        <dt>VIN</dt><dd>Vehicle identification number, the identifier used to match a vehicle to its market, model, equipment and service information.</dd>
+        <dt>TSB</dt><dd>Technical service bulletin: manufacturer guidance for a known condition, with a defined vehicle and symptom scope; it is not automatically a recall.</dd>
+        <dt>Cannot duplicate</dt><dd>The reported symptom did not occur under the attempted conditions. It is an unresolved diagnostic state, not evidence that the concern is false.</dd>
+        <dt>Verified resolution</dt><dd>The original concern no longer occurs during a post-repair check that matches the relevant conditions.</dd>
+        <dt>OEM</dt><dd>Original equipment manufacturer, the vehicle maker or its official service-information channel.</dd>
+        <dt>Recall</dt><dd>A formal safety or compliance campaign requiring a defined remedy for affected vehicles; it is different from a service bulletin.</dd>
+        <dt>Telematics</dt><dd>Vehicle data transmitted remotely, often through a fleet or connected-car service; coverage and consent depend on the system.</dd>
+      </dl>
+    </section>
+
   </main>
 </div>
 <script>
 (() => {
   const views = [...document.querySelectorAll('[data-view]')];
   const links = [...document.querySelectorAll('[data-route-link]')];
-  const topRoutes = new Set(['start','domain','compare','evidence','all']);
+  const topRoutes = new Set(['start','domain','compare','evidence','all','glossary']);
   const viewFor = route => document.querySelector(`[data-view="${CSS.escape(route)}"]`);
   const anchorFor = route => document.getElementById(route);
   const containingView = node => node?.closest('[data-view]');
