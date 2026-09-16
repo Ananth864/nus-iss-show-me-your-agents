@@ -353,11 +353,13 @@
   const links = [...document.querySelectorAll('[data-route-link]')];
   const topRoutes = new Set(['start','domain','compare','evidence','all']);
   const viewFor = route => document.querySelector(`[data-view="${CSS.escape(route)}"]`);
+  const anchorFor = route => document.getElementById(route);
+  const containingView = node => node?.closest('[data-view]');
   const sectionFor = route => route.startsWith('domain-') ? 'domain' : route.startsWith('candidate-') ? 'compare' : topRoutes.has(route) ? route : 'start';
   function saveScroll(){ history.replaceState({...history.state, scrollY:window.scrollY, route:location.hash.slice(1)||'start'},''); }
   function render(focus=true){
     const route = location.hash.slice(1) || 'start';
-    const target = viewFor(route) || viewFor('start');
+    const target = viewFor(route) || containingView(anchorFor(route)) || viewFor('start');
     document.body.classList.toggle('read-all', route === 'all');
     views.forEach(v => v.classList.toggle('active', v === target));
     links.forEach(a => {
@@ -366,7 +368,12 @@
     });
     if (route === 'all') views.forEach(v => v.classList.add('active'));
     const y = history.state?.route === route ? history.state?.scrollY || 0 : 0;
-    requestAnimationFrame(() => { window.scrollTo(0,y); if(focus){ target.setAttribute('tabindex','-1'); target.focus({preventScroll:true}); } });
+    requestAnimationFrame(() => {
+      if (y) window.scrollTo(0,y);
+      else if (anchorFor(route) && anchorFor(route) !== target) anchorFor(route).scrollIntoView({block:'start'});
+      else window.scrollTo(0,0);
+      if(focus){ target.setAttribute('tabindex','-1'); target.focus({preventScroll:true}); }
+    });
   }
   document.addEventListener('click', e => { const a=e.target.closest('[data-route-link]'); if(!a) return; saveScroll(); });
   window.addEventListener('popstate', () => render(false));
