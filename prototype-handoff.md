@@ -3,8 +3,8 @@
 Ideation run ID: `run-20260916-01`  
 Protocol that governed the research run: coordinator protocol version 0.4  
 Handoff format applied on 2026-09-19: coordinator protocol version 1.2  
-Absolute run directory: `/Users/ananthacharya/Documents/Codex/2026-09-16/run-ideation-workflow-coordinator-md-version-2/work/ideation/run-20260916-01`  
-Final report: `/Users/ananthacharya/Documents/Codex/2026-09-16/run-ideation-workflow-coordinator-md-version-2/outputs/hackathon-report-v2.html`  
+Private run directory and internal research paths are omitted from this public copy.
+Final report: [published report](index.html)
 Final report SHA-256: `215773567821c06b071f49f116696b546b3723094b83c73e568d030f1a986762`
 
 This file prepares a later user-invoked prototype session. It does not select a candidate or authorize implementation.
@@ -19,7 +19,7 @@ Available resources mentioned by organizers include Amazon Lightsail, AWS Bedroc
 
 The run assumed 40 to 80 total team-hours, balanced full-stack and agent capability, no guaranteed workshop partner and no proprietary dataset because the intake reply did not arrive. Replace those assumptions before choosing a build.
 
-Authoritative records: [brief](brief.md), [official email constraints](sources/email-event-constraints.md), [event research](tasks/T001.md), [questions](questions.md), [evidence index](sources.md).
+Private archive records: brief, official email constraints, event research T001, questions and evidence index.
 
 ## C002 v2, adaptive next-test planner
 
@@ -49,7 +49,7 @@ Simulated components allowed for the prototype: deterministic OBD replay, author
 
 Required access: applicable service information, technician reviewer, named fixture, approved tests, a tool-capable model or deterministic fallback, local case storage and a browser interface. Live OBD, vehicle writes, actuator commands and paid-manual ingestion are not required.
 
-Records: [candidate C002 v2](candidates/C002.md), [authoring task T005](tasks/T005.md), [independent objection T007](tasks/T007.md), [experiment E001](experiments/E001/report.md), [domain briefing](domain-briefing.md), [shortlist](shortlist.md), [evidence](sources.md).
+Private archive records: candidate C002 v2, T005, T007, E001, domain briefing, shortlist and evidence index.
 
 ## C004 v1, safe recurrence capture
 
@@ -79,7 +79,7 @@ Simulated components allowed for the prototype: replayed trip traces, a missing-
 
 Required access: workshop cases, technician or foreman, read-only signal definitions, passive logging capability, local consent and case records, and browser/mobile views. Live judging-time vehicle access, continuous cellular service, remote actuation and write commands are not required.
 
-Records: [candidate C004 v1](candidates/C004.md), [coverage challenge T010](tasks/T010.md), [recurrence investigation T011](tasks/T011.md), [domain briefing](domain-briefing.md), [shortlist](shortlist.md), [evidence](sources.md).
+Private archive records: candidate C004 v1, T010, T011, domain briefing, shortlist and evidence index.
 
 ## C001 v2, evidence and source-triage case builder
 
@@ -109,7 +109,7 @@ Simulated components allowed for the prototype: authored incomplete case briefs 
 
 Required access: NHTSA documents and flat-file fields, optional vPIC decoding, a tool-capable model or deterministic fallback, local storage, two source reviewers and a browser interface. Live OBD, a vehicle, repair histories and paid manuals are not required.
 
-Records: [candidate C001 v2](candidates/C001.md), [authoring task T004](tasks/T004.md), [independent objection T009](tasks/T009.md), [domain briefing](domain-briefing.md), [shortlist](shortlist.md), [evidence](sources.md).
+Private archive records: candidate C001 v2, T004, T009, domain briefing, shortlist and evidence index.
 
 ## Comparison and reserved decisions
 
@@ -123,6 +123,6 @@ Decisions reserved for the user:
 - Approve the named vehicle and fault scope, model provider, deployment environment and acceptable demo simulation.
 - Decide whether to reopen C003 after its real-data gate.
 
-Reusable findings and archive: [domain briefing](domain-briefing.md), [questions](questions.md), [decisions](decisions.md), [source index](sources.md), [shelved C003 v2](candidates/C003.md), [all task reports](tasks/), [final comparison](shortlist.md), [completion review](completion-review.md).
+Private reusable archive: domain briefing, questions, decisions, source index, shelved C003 v2, task reports, final comparison and completion review.
 
 Recommended first prototype question: which candidate's decisive gate can the team run with real reviewers and materials within the remaining build window? Answer that before writing product code.

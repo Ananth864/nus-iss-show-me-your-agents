@@ -120,7 +120,7 @@ No other executed decision experiment exists. The 50-document C001 gate, 12-stat
 
 Provisional handoff ready.
 
-[prototype-handoff.md](prototype-handoff.md) exists and includes every viable shortlisted candidate at the exact final version: C001 v2, C002 v2 and C004 v1. It links authoritative records, keeps C003 v2 in the shelved archive, separates real and simulated components, preserves unknowns and reserves candidate selection for the user. It does not state or imply that implementation has begun.
+[prototype-handoff.md](prototype-handoff.md) is a public-safe summary. It includes every viable shortlisted candidate at the exact final version: C001 v2, C002 v2 and C004 v1. It omits local filesystem paths and links to unpublished research records, keeps C003 v2 in the private shelved archive, separates real and simulated components, preserves unknowns and reserves candidate selection for the user. The private run-local handoff links the authoritative records. Neither copy states or implies that implementation has begun.
 
 Unresolved items:
 
